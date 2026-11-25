@@ -383,20 +383,22 @@
       const v = name => form.elements[name].value.trim();
       const payload = {
         access_key: WEB3FORMS_KEY,
-        subject: `${pkg.name} — ${v("name")} (${v("city")})`,
+        subject: `${pkg.name} Package, ${v("city")} (${v("name")})`,
         from_name: "Booking | LMC",
         Package: `${pkg.name} — ${rupees(s.total)}`,
-        Services: s.serviceLines,
         Name: v("name"),
         Phone: v("phone"),
-        Email: v("email") || "—",
+        Email: v("email"),
         City: v("city"),
         "Address / hospital": v("address"),
         Payment: s.paymentText,
-        Notes: v("notes") || "—",
+        Notes: v("notes"),
+        Services: s.serviceLines,
         botcheck: false,
         "h-captcha-response": captchaToken(node),
       };
+      // Leave out empty fields so they don't appear in the booking email
+      for (const k in payload) if (payload[k] === "" || payload[k] == null || (Array.isArray(payload[k]) && !payload[k].length)) delete payload[k];
       if (v("email")) payload.replyto = v("email");
 
       try {
