@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Last Mile Care — End-to-end funeral management</title>
+  <meta name="description" content="One manager, every phase, complete logistical relief for families. Funeral packages from ₹20K, or pick only the services you need." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Top bar ===== -->
+  <header class="topbar">
+    <a href="#" class="brand">Last Mile Care</a>
+    <nav>
+      <a href="#packages">Packages</a>
+      <a href="#flexible">Build your own</a>
+      <a href="#request">Request</a>
+    </nav>
+    <a class="btn btn-small" href="tel:+919111648336">Call 24×7</a>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <p class="label">End-to-end funeral management</p>
+    <h1>No family should have to manage a funeral alone.</h1>
+    <p class="lead">One manager, every phase, complete logistical relief. From the first hours to the 13th day, we coordinate the vendors so you can be with your family.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#packages">See packages</a>
+      <a class="btn btn-ghost" href="#flexible">Pick only what you need</a>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section class="steps">
+    <p class="label">What we take care of</p>
+    <ol>
+      <li><strong>Foremost</strong><span>Body transport, freezer box, death paperwork</span></li>
+      <li><strong>Preparation</strong><span>Priest for your community, samagri, flowers</span></li>
+      <li><strong>Ceremony</strong><span>Cremation or burial slot, on-site coordination</span></li>
+      <li><strong>Guests</strong><span>Live updates for relatives, guest count</span></li>
+      <li><strong>Post-rite</strong><span>Death certificate, asthi visarjan</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== Packages (filled in by script.js) ===== -->
+  <section id="packages" class="section">
+    <p class="label">Packages</p>
+    <h2>Choose a package</h2>
+    <div class="cards" id="package-cards"></div>
+  </section>
+
+  <!-- ===== Flexible package (filled in by script.js) ===== -->
+  <section id="flexible" class="section section-dark">
+    <p class="label">Flexible package</p>
+    <h2>Pick only the services you need</h2>
+    <p class="lead">Tick what you need and see the exact price instantly. No hidden charges.</p>
+    <div class="flex-layout">
+      <div id="service-list" class="service-list"></div>
+      <aside class="summary">
+        <p class="label">Your selection</p>
+        <ul id="summary-items"><li class="muted">Nothing selected yet</li></ul>
+        <div class="total"><span>Total</span><strong id="total">₹0</strong></div>
+        <button class="btn" id="use-flexible">Request these services</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== Request form ===== -->
+  <section id="request" class="section">
+    <p class="label">Request a service</p>
+    <h2>We'll call you back within minutes</h2>
+    <form id="request-form" class="form">
+      <label>Your name<input name="name" required /></label>
+      <label>Phone number<input name="phone" type="tel" required /></label>
+      <label>City
+        <select name="city" required>
+          <option value="">Select city</option>
+          <option>Delhi-NCR</option>
+          <option>Chandigarh Tricity</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <label>Package
+        <select name="package" id="package-select" required></select>
+      </label>
+      <p class="form-note" id="form-selection"></p>
+      <button class="btn" type="submit">Send request on WhatsApp</button>
+      <p class="muted small">Prefer to talk? Call us any time at <a href="tel:+919111648336">+91 91116 48336</a>.</p>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <p><strong>Last Mile Care</strong> · PIEDS Student Team, BITS Pilani</p>
+    <p class="muted small">Prices are indicative and may vary by city.</p>
+  </footer>
+
+  <script>
+// =====================================================
+// Last Mile Care — all prices live here. Edit freely.
+// =====================================================
+
+// Every service a family can pick in the Flexible package.
+// id = short name used in code, name = what people see, price = in rupees
+const SERVICES = [
+  { id: "transport",  name: "Body transport (hearse)",       price: 4000 },
+  { id: "freezer",    name: "Freezer box",                   price: 2500 },
+  { id: "priest",     name: "Priest for your community",     price: 3500 },
+  { id: "samagri",    name: "Samagri",                       price: 3000 },
+  { id: "cremation",  name: "Cremation / burial slot",       price: 8000 },
+  { id: "manager",    name: "On-site funeral manager",       price: 2000 },
+  { id: "flowers",    name: "Flowers",                       price: 1500 },
+  { id: "guestlink",  name: "Guest-management link",         price: 500  },
+  { id: "prayermeet", name: "Prayer meet arrangement",       price: 1500 },
+  { id: "mangowood",  name: "Mango wood",                    price: 1000 },
+  { id: "catering",   name: "Catering",                      price: 5000 },
+  { id: "day13",      name: "13th-day rites",                price: 3000 },
+  { id: "asthi",      name: "Asthi visarjan",                price: 2500 },
+  { id: "paperwork",  name: "Death certificate paperwork",   price: 1000 },
+];
+
+// The three fixed packages. "includes" lists service ids from above.
+const PACKAGES = [
+  {
+    name: "Essential",
+    price: 20000,
+    includes: ["transport", "freezer", "priest", "samagri", "cremation"],
+  },
+  {
+    name: "Complete",
+    price: 25000,
+    tag: "Most chosen",
+    includes: ["transport", "freezer", "priest", "samagri", "cremation",
+               "manager", "flowers", "guestlink", "prayermeet", "mangowood"],
+  },
+  {
+    name: "Premium",
+    price: 33000,
+    includes: ["transport", "freezer", "priest", "samagri", "cremation",
+               "manager", "flowers", "guestlink", "prayermeet", "mangowood",
+               "catering", "day13", "asthi"],
+  },
+];
+
+// WhatsApp number that receives requests (country code, no + or spaces)
+const WHATSAPP_NUMBER = "919111648336";
+
+// =====================================================
+// Code below builds the page from the data above.
+// =====================================================
+
+// Turn 25000 into "₹25,000" (Indian digit grouping)
+function rupees(amount) {
+  return "₹" + amount.toLocaleString("en-IN");
+}
+
+function serviceName(id) {
+  return SERVICES.find(s => s.id === id).name;
+}
+
+// ---------- Package cards ----------
+const cardsBox = document.getElementById("package-cards");
+PACKAGES.forEach(pkg => {
+  const card = document.createElement("div");
+  card.className = "card" + (pkg.tag ? " card-featured" : "");
+  card.innerHTML = `
+    ${pkg.tag ? `<span class="tag">${pkg.tag}</span>` : ""}
+    <h3>${pkg.name}</h3>
+    <p class="price">${rupees(pkg.price)}</p>
+    <ul>${pkg.includes.map(id => `<li>${serviceName(id)}</li>`).join("")}</ul>
+    <button class="btn ${pkg.tag ? "" : "btn-ghost"}">Choose ${pkg.name}</button>
+  `;
+  card.querySelector("button").addEventListener("click", () => choosePackage(pkg.name));
+  cardsBox.appendChild(card);
+});
+
+// ---------- Flexible package checklist ----------
+const listBox = document.getElementById("service-list");
+SERVICES.forEach(s => {
+  const row = document.createElement("label");
+  row.className = "service";
+  row.innerHTML = `
+    <input type="checkbox" value="${s.id}" />
+    <span class="service-name">${s.name}</span>
+    <span class="service-price">${rupees(s.price)}</span>
+  `;
+  listBox.appendChild(row);
+});
+
+// Which service ids are ticked right now
+function selectedIds() {
+  return [...listBox.querySelectorAll("input:checked")].map(box => box.value);
+}
+
+function selectedTotal() {
+  return selectedIds().reduce((sum, id) => sum + SERVICES.find(s => s.id === id).price, 0);
+}
+
+// Redraw the summary box every time a checkbox changes
+function updateSummary() {
+  const ids = selectedIds();
+  const items = document.getElementById("summary-items");
+  items.innerHTML = ids.length
+    ? ids.map(id => {
+        const s = SERVICES.find(x => x.id === id);
+        return `<li><span>${s.name}</span><span>${rupees(s.price)}</span></li>`;
+      }).join("")
+    : `<li class="muted">Nothing selected yet</li>`;
+  document.getElementById("total").textContent = rupees(selectedTotal());
+  updateFormNote();
+}
+listBox.addEventListener("change", updateSummary);
+
+// ---------- Request form ----------
+const packageSelect = document.getElementById("package-select");
+packageSelect.innerHTML =
+  `<option value="">Select package</option>` +
+  PACKAGES.map(p => `<option>${p.name}</option>`).join("") +
+  `<option>Flexible</option>`;
+
+function choosePackage(name) {
+  packageSelect.value = name;
+  updateFormNote();
+  document.getElementById("request").scrollIntoView({ behavior: "smooth" });
+}
+
+document.getElementById("use-flexible").addEventListener("click", () => {
+  if (selectedIds().length === 0) {
+    document.getElementById("total").textContent = "Tick at least one service";
+    return;
+  }
+  choosePackage("Flexible");
+});
+
+packageSelect.addEventListener("change", updateFormNote);
+
+// Show what will be requested, under the package dropdown
+function updateFormNote() {
+  const note = document.getElementById("form-selection");
+  const choice = packageSelect.value;
+  if (choice === "Flexible") {
+    const ids = selectedIds();
+    note.textContent = ids.length
+      ? `Flexible: ${ids.map(serviceName).join(", ")} — ${rupees(selectedTotal())}`
+      : "Tick services in the Flexible section above first.";
+  } else if (choice) {
+    note.textContent = `${choice} package — ${rupees(PACKAGES.find(p => p.name === choice).price)}`;
+  } else {
+    note.textContent = "";
+  }
+}
+
+// On submit, open WhatsApp with a ready-made message
+document.getElementById("request-form").addEventListener("submit", event => {
+  event.preventDefault();
+  const form = event.target;
+  const lines = [
+    "New request — Last Mile Care",
+    `Name: ${form.name.value}`,
+    `Phone: ${form.phone.value}`,
+    `City: ${form.city.value}`,
+    `Package: ${document.getElementById("form-selection").textContent || packageSelect.value}`,
+  ];
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+  window.open(url, "_blank");
+});
+
+  </script>
+</body>
+</html>
