@@ -116,3 +116,20 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); }
   .pkg-body { padding: 4px 18px 22px; }
   .hero::after { width: 300px; height: 300px; right: -120px; top: -100px; }
 }
+
+/* Small phones: price moves under the package name */
+@media (max-width: 480px) {
+  .pkg-head { flex-wrap: wrap; row-gap: 6px; }
+  .pkg-title { flex: 1 1 calc(100% - 40px); order: 1; }
+  .chevron { order: 2; }
+  .pkg-price { order: 3; flex-basis: 100%; font-size: 1.2rem; }
+  .topbar { padding: 12px 5vw; gap: 12px; }
+  .section, .hero, .steps { padding-left: 5vw; padding-right: 5vw; }
+}
+
+/* Phones held sideways: top bar no longer sticks, so it doesn't cover the form */
+@media (max-height: 480px) and (orientation: landscape) {
+  .topbar { position: static; }
+  .pkg { scroll-margin-top: 10px; }
+}
+
