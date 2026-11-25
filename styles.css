@@ -109,6 +109,12 @@ label:has(select:valid) .req,
 .pay:has(input:checked) legend .req,
 .pkg:has(.checklist input:checked) .services-req { display: none; }
 
+.field-error { color: #a12a1a; font-size: .88rem; font-weight: 500; }
+.grid [aria-invalid="true"] { border-color: #a12a1a; background: #fdf3f1; }
+.error a, .done a, .hero-contact a, .footer a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.hero-contact { color: #d7dbe3; margin-top: 18px; }
+.botcheck { position: absolute; left: -9999px; }
+
 /* Footer */
 .footer { background: var(--navy); color: #fff; padding: 32px 6vw; }
 .footer p { margin: 4px 0; }

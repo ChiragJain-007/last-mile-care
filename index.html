@@ -17,6 +17,7 @@
     <a href="#" class="brand">Last Mile Care</a>
     <nav>
       <a href="#packages">Packages</a>
+      <a href="mailto:f20260984@pilani.bits-pilani.ac.in">Email us</a>
     </nav>
     <a class="btn btn-small" href="tel:+919111648336">Call 24×7</a>
   </header>
@@ -30,6 +31,7 @@
       <a class="btn" href="#packages">Choose a package</a>
       <a class="btn btn-ghost" href="tel:+919111648336">Call +91 91116 48336</a>
     </div>
+    <p class="hero-contact">Or write to us at <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a></p>
   </section>
 
   <!-- ===== What we take care of ===== -->
@@ -56,7 +58,8 @@
 
   <footer class="footer">
     <p><strong>Last Mile Care</strong> · PIEDS Student Team, BITS Pilani</p>
-    <p class="muted-light small">Available 24×7 · <a href="tel:+919111648336">+91 91116 48336</a> · Prices are indicative and may vary by city.</p>
+    <p class="muted-light small">Available 24×7 · <a href="tel:+919111648336">+91 91116 48336</a> · <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a></p>
+    <p class="muted-light small">Prices are indicative and may vary by city.</p>
   </footer>
 
   <!-- One package row is built from this template for each package in prices.json -->
@@ -77,15 +80,16 @@
           <div class="step">
             <h3><span class="num">1</span> <span class="step-title">What's included</span><span class="req services-req" aria-hidden="true" hidden>*</span></h3>
             <div class="services"></div>
+            <small class="field-error" data-for="services" hidden></small>
           </div>
 
           <div class="step">
             <h3><span class="num">2</span> Your details</h3>
             <p class="small muted req-note"><span class="req">*</span> Required</p>
             <div class="grid">
-              <label><span>Your name <span class="req" aria-hidden="true">*</span></span><input name="name" autocomplete="name" required /></label>
-              <label><span>Phone number <span class="req" aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" required /></label>
-              <label><span>Email <span class="muted">(optional)</span></span><input name="email" type="email" autocomplete="email" /></label>
+              <label><span>Your name <span class="req" aria-hidden="true">*</span></span><input name="name" autocomplete="name" required /><small class="field-error" data-for="name" hidden></small></label>
+              <label><span>Phone number <span class="req" aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" required /><small class="field-error" data-for="phone" hidden></small></label>
+              <label><span>Email <span class="muted">(optional)</span></span><input name="email" type="email" autocomplete="email" /><small class="field-error" data-for="email" hidden></small></label>
               <label><span>City <span class="req" aria-hidden="true">*</span></span>
                 <select name="city" required>
                   <option value="">Select city</option>
@@ -93,8 +97,9 @@
                   <option>Chandigarh Tricity</option>
                   <option>Other</option>
                 </select>
+                <small class="field-error" data-for="city" hidden></small>
               </label>
-              <label class="wide"><span>Address or hospital <span class="req" aria-hidden="true">*</span></span><input name="address" required /></label>
+              <label class="wide"><span>Address or hospital <span class="req" aria-hidden="true">*</span></span><input name="address" required /><small class="field-error" data-for="address" hidden></small></label>
               <label class="wide"><span>Anything we should know <span class="muted">(optional)</span></span><textarea name="notes" rows="2"></textarea></label>
             </div>
           </div>
@@ -107,8 +112,10 @@
               <legend>How will you pay? <span class="req" aria-hidden="true">*</span></legend>
               <label><input type="radio" name="payment" value="upi" required /> UPI to the coordinator</label>
               <label><input type="radio" name="payment" value="cash" /> Cash to the coordinator</label>
+              <small class="field-error" data-for="payment" hidden></small>
             </fieldset>
             <p class="small muted">Nothing is charged online. You pay the coordinator once they have confirmed the arrangements with you.</p>
+            <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
             <p class="error" role="alert" hidden></p>
             <button class="btn confirm" type="submit">Confirm booking</button>
           </div>
@@ -117,7 +124,7 @@
 
         <div class="done" hidden>
           <h3>Booking received</h3>
-          <p>Our coordinator will call you shortly on <strong class="done-phone"></strong>. If you need us sooner, call <a href="tel:+919111648336">+91 91116 48336</a>, any time.</p>
+          <p>Our coordinator will call you shortly on <strong class="done-phone"></strong>. If you need us sooner, call <a href="tel:+919111648336">+91 91116 48336</a> any time, or email <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a>.</p>
         </div>
       </div>
     </article>
@@ -126,8 +133,16 @@
   <script>
     // =====================================================
     // Prices and packages live in prices.json. Edit them there.
-    // The same file is used by the email function in api/book.js.
     // =====================================================
+
+    // Web3Forms access key: bookings are emailed to the address this key was made for.
+    // The key is public by design (it can only send mail to you, not read it).
+    const WEB3FORMS_KEY = "PASTE_WEB3FORMS_KEY_HERE";
+
+    const CONTACT_PHONE = "+91 91116 48336";
+    const CONTACT_EMAIL = "f20260984@pilani.bits-pilani.ac.in";
+    const CONTACT_HTML =
+      `Please contact us at <a href="tel:${CONTACT_PHONE.replace(/\s/g, "")}">${CONTACT_PHONE}</a> or <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.`;
 
     let DATA = null;
 
@@ -172,6 +187,7 @@
 
       node.querySelector(".pkg-head").addEventListener("click", () => toggle(node));
       node.querySelector("form").addEventListener("submit", e => submitBooking(e, node, pkg));
+      liveCheck(node, pkg);
       updateBill(node, pkg);
       return node;
     }
@@ -214,10 +230,79 @@
       node.querySelector(".total").textContent = rupees(total);
     }
 
-    function showError(node, message) {
+    // Shows a message under the form; allowHtml is used only for our own contact links
+    function showError(node, message, allowHtml = false) {
       const box = node.querySelector(".error");
-      box.textContent = message;
+      if (allowHtml) box.innerHTML = message; else box.textContent = message;
       box.hidden = !message;
+    }
+
+    // One clear message for each field that needs fixing
+    function fieldProblem(form, field, node, pkg) {
+      const el = form.elements[field];
+      const value = el && el.value ? el.value.trim() : "";
+      switch (field) {
+        case "services":
+          return pkg.id === "flexible" && chosenIds(node, pkg).length === 0 ? "Please tick at least one service." : "";
+        case "name":
+          return value ? "" : "Please enter your name.";
+        case "phone":
+          if (!value) return "Please enter a phone number so our coordinator can call you.";
+          return /^[+\d][\d\s-]{6,18}$/.test(value) ? "" : "Please check the phone number. Use digits only, with an optional + and country code.";
+        case "email":
+          return !value || el.checkValidity() ? "" : "Please enter a valid email address, or leave it blank.";
+        case "city":
+          return value ? "" : "Please choose your city.";
+        case "address":
+          return value ? "" : "Please enter the address or hospital.";
+        case "payment":
+          return form.elements.payment.value ? "" : "Please choose how you will pay.";
+      }
+      return "";
+    }
+
+    const FIELDS = ["services", "name", "phone", "email", "city", "address", "payment"];
+
+    function showFieldError(node, field, message) {
+      const slot = node.querySelector(`.field-error[data-for="${field}"]`);
+      if (!slot) return;
+      slot.textContent = message;
+      slot.hidden = !message;
+      const el = node.querySelector("form").elements[field];
+      if (el && el.setAttribute && field !== "payment") el.setAttribute("aria-invalid", message ? "true" : "false");
+    }
+
+    // Checks every field, shows a message under each wrong one, returns the first wrong field
+    function validate(form, node, pkg) {
+      let first = null;
+      for (const field of FIELDS) {
+        const problem = fieldProblem(form, field, node, pkg);
+        showFieldError(node, field, problem);
+        if (problem && !first) first = field;
+      }
+      return first;
+    }
+
+    // Clear a field's message as soon as it's fixed
+    function liveCheck(node, pkg) {
+      const form = node.querySelector("form");
+      const recheck = event => {
+        const field = event.target.name === "payment" ? "payment"
+          : event.target.closest(".checklist") ? "services" : event.target.name;
+        const slot = node.querySelector(`.field-error[data-for="${field}"]`);
+        if (slot && !slot.hidden) showFieldError(node, field, fieldProblem(form, field, node, pkg));
+        if ([...node.querySelectorAll(".field-error")].every(s => s.hidden)) showError(node, "");
+      };
+      form.addEventListener("input", recheck);
+      form.addEventListener("change", recheck);
+    }
+
+    function bookingSummary(node, pkg, form) {
+      const ids = chosenIds(node, pkg);
+      const services = ids.map(id => service(id));
+      const total = pkg.id === "flexible" ? services.reduce((s, x) => s + x.price, 0) : pkg.price;
+      const serviceLines = services.map(s => `• ${s.name}${pkg.id === "flexible" ? ` (${rupees(s.price)})` : ""}`).join("\n");
+      return { total, serviceLines, paymentText: form.elements.payment.value === "upi" ? "UPI to the coordinator" : "Cash to the coordinator" };
     }
 
     async function submitBooking(event, node, pkg) {
@@ -225,44 +310,57 @@
       const form = event.target;
       showError(node, "");
 
-      if (pkg.id === "flexible" && chosenIds(node, pkg).length === 0) {
-        return showError(node, "Please tick at least one service.");
+      const firstWrong = validate(form, node, pkg);
+      if (firstWrong) {
+        const target = firstWrong === "services" ? node.querySelector(".checklist input")
+          : firstWrong === "payment" ? form.querySelector("input[name=payment]") : form.elements[firstWrong];
+        if (target) target.focus();
+        const count = [...node.querySelectorAll(".field-error")].filter(s => !s.hidden).length;
+        return showError(node, count === 1 ? "Please fix the highlighted field above." : `Please fix the ${count} highlighted fields above.`);
       }
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return showError(node, "Please fill in your name, phone, city, address and payment method.");
+      if (form.elements.botcheck.checked) return; // spam bot
+
+      if (!WEB3FORMS_KEY || WEB3FORMS_KEY.startsWith("PASTE_")) {
+        return showError(node, "Online booking is not set up yet. " + CONTACT_HTML, true);
       }
 
       const button = form.querySelector(".confirm");
       button.disabled = true;
       button.textContent = "Sending…";
 
+      const s = bookingSummary(node, pkg, form);
+      const v = name => form.elements[name].value.trim();
       const payload = {
-        package: pkg.id,
-        services: chosenIds(node, pkg),
-        name: form.elements.name.value,
-        phone: form.elements.phone.value,
-        email: form.elements.email.value,
-        city: form.elements.city.value,
-        address: form.elements.address.value,
-        notes: form.elements.notes.value,
-        payment: form.elements.payment.value,
+        access_key: WEB3FORMS_KEY,
+        subject: `New booking: ${pkg.name} — ${v("name")} (${v("city")})`,
+        from_name: "Last Mile Care Website",
+        Package: `${pkg.name} — ${rupees(s.total)}`,
+        Services: s.serviceLines,
+        Name: v("name"),
+        Phone: v("phone"),
+        Email: v("email") || "—",
+        City: v("city"),
+        "Address / hospital": v("address"),
+        Payment: s.paymentText,
+        Notes: v("notes") || "—",
+        botcheck: false,
       };
+      if (v("email")) payload.replyto = v("email");
 
       try {
-        const res = await fetch("/api/book", {
+        const res = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify(payload),
         });
         const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.ok) throw new Error(result.error || "Something went wrong. Please call us on +91 91116 48336.");
+        if (!res.ok || !result.success) throw new Error("send failed");
 
         form.hidden = true;
-        node.querySelector(".done-phone").textContent = payload.phone;
+        node.querySelector(".done-phone").textContent = v("phone");
         node.querySelector(".done").hidden = false;
       } catch (err) {
-        showError(node, err instanceof TypeError ? "No connection. Please call us on +91 91116 48336." : err.message);
+        showError(node, "We couldn't send your booking. " + CONTACT_HTML, true);
         button.disabled = false;
         button.textContent = "Confirm booking";
       }
@@ -279,7 +377,7 @@
       })
       .catch(() => {
         document.getElementById("package-list").innerHTML =
-          `<p>Couldn't load packages. Please call us on <a href="tel:+919111648336">+91 91116 48336</a>.</p>`;
+          `<p>Couldn't load packages. ${CONTACT_HTML}</p>`;
       });
   </script>
 </body>
