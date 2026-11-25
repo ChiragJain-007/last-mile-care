@@ -117,6 +117,11 @@
             </fieldset>
             <p class="small muted">Nothing is charged online. You pay the coordinator once they have confirmed the arrangements with you.</p>
             <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="captcha-wrap">
+              <p class="captcha-label">Security check <span class="req" aria-hidden="true">*</span></p>
+              <div class="captcha"></div>
+              <small class="field-error" data-for="captcha" hidden></small>
+            </div>
             <p class="error" role="alert" hidden></p>
             <button class="btn confirm" type="submit">Confirm booking</button>
           </div>
@@ -135,6 +140,10 @@
     // Web3Forms access key: bookings are emailed to the address this key was made for.
     // The key is public by design (it can only send mail to you, not read it).
     const WEB3FORMS_KEY = "d06f05d9-aa6a-4b50-87f4-e72420f0a0c0";
+
+    // hCaptcha ("I am human" check). Web3Forms checks the answer on its side.
+    // This is Web3Forms' public sitekey for free plans (from their docs).
+    const HCAPTCHA_SITEKEY = "50b2fe65-b00b-4b9e-ad62-3ba471098be2";
 
     const CONTACT_PHONE = "+91 91116 48336";
     const CONTACT_EMAIL = "f20260984@pilani.bits-pilani.ac.in";
@@ -201,8 +210,45 @@
         node.querySelector(".pkg-head").setAttribute("aria-expanded", "true");
         node.querySelector(".pkg-body").hidden = false;
         node.classList.add("open");
+        renderCaptcha(node);
         node.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+    }
+
+    // ---------- hCaptcha ----------
+    // Draws the check inside a package the first time it is opened.
+    // Phones get the compact version so it fits the screen.
+    function renderCaptcha(node) {
+      const box = node.querySelector(".captcha");
+      if (box.dataset.widgetId !== undefined) return;
+      if (!window.hcaptcha || !window.hcaptcha.render) {
+        window.__captchaQueue = (window.__captchaQueue || []).concat(node);
+        return;
+      }
+      box.dataset.widgetId = window.hcaptcha.render(box, {
+        sitekey: HCAPTCHA_SITEKEY,
+        size: window.innerWidth < 420 ? "compact" : "normal",
+        callback: () => { showFieldError(node, "captcha", ""); node.querySelector(".captcha-wrap").classList.add("done"); },
+        "expired-callback": () => { node.querySelector(".captcha-wrap").classList.remove("done"); showFieldError(node, "captcha", "The check expired. Please tick it again."); },
+      });
+    }
+
+    // Called by the hCaptcha script once it has loaded
+    window.onCaptchaReady = function () {
+      (window.__captchaQueue || []).forEach(renderCaptcha);
+      window.__captchaQueue = [];
+    };
+
+    function captchaToken(node) {
+      const id = node.querySelector(".captcha").dataset.widgetId;
+      if (id === undefined || !window.hcaptcha) return "";
+      return window.hcaptcha.getResponse(id) || "";
+    }
+
+    function resetCaptcha(node) {
+      const id = node.querySelector(".captcha").dataset.widgetId;
+      if (id !== undefined && window.hcaptcha) window.hcaptcha.reset(id);
+      node.querySelector(".captcha-wrap").classList.remove("done");
     }
 
     function chosenIds(node, pkg) {
@@ -252,13 +298,16 @@
           return value ? "" : "Please choose your city.";
         case "address":
           return value ? "" : "Please enter the address or hospital.";
+        case "captcha":
+          if (!window.hcaptcha) return "The security check didn't load. Please refresh the page.";
+          return captchaToken(node) ? "" : "Please tick the \"I am human\" box.";
         case "payment":
           return form.elements.payment.value ? "" : "Please choose how you will pay.";
       }
       return "";
     }
 
-    const FIELDS = ["services", "name", "phone", "email", "city", "address", "payment"];
+    const FIELDS = ["services", "name", "phone", "email", "city", "address", "payment", "captcha"];
 
     function showFieldError(node, field, message) {
       const slot = node.querySelector(`.field-error[data-for="${field}"]`);
@@ -310,8 +359,13 @@
       const firstWrong = validate(form, node, pkg);
       if (firstWrong) {
         const target = firstWrong === "services" ? node.querySelector(".checklist input")
-          : firstWrong === "payment" ? form.querySelector("input[name=payment]") : form.elements[firstWrong];
+          : firstWrong === "payment" ? form.querySelector("input[name=payment]")
+          : firstWrong === "captcha" ? null : form.elements[firstWrong];
+        if (firstWrong === "captcha") node.querySelector(".captcha-wrap").scrollIntoView({ behavior: "smooth", block: "center" });
         if (target) target.focus();
+        if (firstWrong === "captcha" && !window.hcaptcha) {
+          return showError(node, "The security check didn't load, so we can't take the booking online right now. " + CONTACT_HTML, true);
+        }
         const count = [...node.querySelectorAll(".field-error")].filter(s => !s.hidden).length;
         return showError(node, count === 1 ? "Please fix the highlighted field above." : `Please fix the ${count} highlighted fields above.`);
       }
@@ -341,6 +395,7 @@
         Payment: s.paymentText,
         Notes: v("notes") || "—",
         botcheck: false,
+        "h-captcha-response": captchaToken(node),
       };
       if (v("email")) payload.replyto = v("email");
 
@@ -362,7 +417,8 @@
         } catch (e) { /* storage unavailable: the page shows a general message */ }
         location.replace("booked.html");
       } catch (err) {
-        showError(node, "We couldn't send your booking. " + CONTACT_HTML, true);
+        resetCaptcha(node);
+        showError(node, "We couldn't send your booking. Please tick the security check again and retry, or " + CONTACT_HTML.charAt(0).toLowerCase() + CONTACT_HTML.slice(1), true);
         button.disabled = false;
         button.textContent = "Confirm booking";
       }
@@ -382,5 +438,6 @@
           `<p>Couldn't load packages. ${CONTACT_HTML}</p>`;
       });
   </script>
+  <script src="https://js.hcaptcha.com/1/api.js?render=explicit&onload=onCaptchaReady" async defer></script>
 </body>
 </html>

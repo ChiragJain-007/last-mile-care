@@ -137,6 +137,12 @@ label:has(select:valid) .req,
 .ack-help a { color: var(--text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .ack-card { padding: 30px 20px; } }
 
+.captcha-wrap { margin: 14px 0 6px; }
+.captcha-label { font-weight: 700; margin: 0 0 8px; }
+.captcha-wrap.done .req { display: none; }
+.captcha { min-height: 78px; max-width: 100%; overflow: hidden; }
+.ack-page { background: #efe6d6; }
+
 /* Footer */
 .footer { background: var(--navy); color: #fff; padding: 32px 6vw; }
 .footer p { margin: 4px 0; }
