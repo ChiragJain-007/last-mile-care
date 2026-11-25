@@ -101,6 +101,14 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); }
 .done { padding: 26px 0 6px; }
 .done h3 { font-size: 1.5rem; }
 
+/* Required-field asterisks: shown until the field is filled */
+.req { color: #a12a1a; font-weight: 700; margin-left: 2px; }
+.req-note { margin: -6px 0 12px; }
+label:has(input:valid) .req,
+label:has(select:valid) .req,
+.pay:has(input:checked) legend .req,
+.pkg:has(.checklist input:checked) .services-req { display: none; }
+
 /* Footer */
 .footer { background: var(--navy); color: #fff; padding: 32px 6vw; }
 .footer p { margin: 4px 0; }

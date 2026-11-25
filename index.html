@@ -75,17 +75,18 @@
         <form class="booking" novalidate>
 
           <div class="step">
-            <h3><span class="num">1</span> <span class="step-title">What's included</span></h3>
+            <h3><span class="num">1</span> <span class="step-title">What's included</span><span class="req services-req" aria-hidden="true" hidden>*</span></h3>
             <div class="services"></div>
           </div>
 
           <div class="step">
             <h3><span class="num">2</span> Your details</h3>
+            <p class="small muted req-note"><span class="req">*</span> Required</p>
             <div class="grid">
-              <label>Your name<input name="name" autocomplete="name" required /></label>
-              <label>Phone number<input name="phone" type="tel" autocomplete="tel" required /></label>
+              <label><span>Your name <span class="req" aria-hidden="true">*</span></span><input name="name" autocomplete="name" required /></label>
+              <label><span>Phone number <span class="req" aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" required /></label>
               <label><span>Email <span class="muted">(optional)</span></span><input name="email" type="email" autocomplete="email" /></label>
-              <label>City
+              <label><span>City <span class="req" aria-hidden="true">*</span></span>
                 <select name="city" required>
                   <option value="">Select city</option>
                   <option>Delhi-NCR</option>
@@ -93,7 +94,7 @@
                   <option>Other</option>
                 </select>
               </label>
-              <label class="wide">Address or hospital<input name="address" required /></label>
+              <label class="wide"><span>Address or hospital <span class="req" aria-hidden="true">*</span></span><input name="address" required /></label>
               <label class="wide"><span>Anything we should know <span class="muted">(optional)</span></span><textarea name="notes" rows="2"></textarea></label>
             </div>
           </div>
@@ -103,7 +104,7 @@
             <ul class="bill"></ul>
             <div class="bill-total"><span>Total</span><strong class="total">₹0</strong></div>
             <fieldset class="pay">
-              <legend>How will you pay?</legend>
+              <legend>How will you pay? <span class="req" aria-hidden="true">*</span></legend>
               <label><input type="radio" name="payment" value="upi" required /> UPI to the coordinator</label>
               <label><input type="radio" name="payment" value="cash" /> Cash to the coordinator</label>
             </fieldset>
@@ -153,6 +154,7 @@
 
       if (pkg.id === "flexible") {
         node.querySelector(".step-title").textContent = "Pick the services you need";
+        node.querySelector(".services-req").hidden = false;
         servicesBox.classList.add("checklist");
         DATA.services.forEach(s => {
           const row = document.createElement("label");
