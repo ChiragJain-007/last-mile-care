@@ -47,8 +47,12 @@
     try {
       const b = JSON.parse(sessionStorage.getItem("lmc-booking") || "null");
       if (b) {
-        document.getElementById("ack-call").textContent =
-          `Our coordinator will call you shortly on ${b.phone} to confirm the arrangements.`;
+        // Build the sentence with the number in its own bold element (no HTML from user input)
+        const call = document.getElementById("ack-call");
+        const phone = document.createElement("strong");
+        phone.className = "ack-phone";
+        phone.textContent = b.phone;
+        call.replaceChildren("Our coordinator will call you shortly on ", phone, " to confirm the arrangements.");
         document.getElementById("ack-package").textContent = b.package;
         document.getElementById("ack-total").textContent = b.total;
         document.getElementById("ack-payment").textContent = b.payment;

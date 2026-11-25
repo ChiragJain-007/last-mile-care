@@ -127,6 +127,7 @@ label:has(select:valid) .req,
 .ack-summary div:last-child { border-bottom: 0; }
 .ack-summary dt { color: var(--muted); }
 .ack-summary dd { margin: 0; font-weight: 700; text-align: right; }
+.ack-phone { font-family: var(--serif); font-weight: 600; font-size: 1.15em; color: var(--navy); white-space: nowrap; letter-spacing: .01em; }
 .ack-help { color: var(--muted); margin: 0 0 26px; }
 .ack-help a { color: var(--text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .ack-card { padding: 30px 20px; } }
