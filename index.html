@@ -383,7 +383,7 @@
       const v = name => form.elements[name].value.trim();
       const payload = {
         access_key: WEB3FORMS_KEY,
-        subject: `${pkg.name} Package, ${v("city")} (${v("name")})`,
+        subject: `[${pkg.name} Package] · ${v("city")}, ${v("name")}`,
         from_name: "Booking | LMC",
         Package: `${pkg.name} — ${rupees(s.total)}`,
         Name: v("name"),
