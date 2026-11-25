@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking received — Last Mile Care</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="ack-page">
+
+  <header class="topbar">
+    <a href="./" class="brand">Last Mile Care</a>
+    <a class="btn btn-small" href="tel:+919111648336">Call 24×7</a>
+  </header>
+
+  <main class="ack">
+    <div class="ack-card">
+      <div class="ack-mark" aria-hidden="true"></div>
+      <p class="label">Booking received</p>
+      <h1>Thank you. We have your request.</h1>
+      <p class="lead" id="ack-call">Our coordinator will call you shortly to confirm the arrangements.</p>
+
+      <dl class="ack-summary" id="ack-summary" hidden>
+        <div><dt>Package</dt><dd id="ack-package"></dd></div>
+        <div><dt>Total</dt><dd id="ack-total"></dd></div>
+        <div><dt>Payment</dt><dd id="ack-payment"></dd></div>
+      </dl>
+
+      <p class="ack-help">If you need us sooner, call <a href="tel:+919111648336">+91 91116 48336</a> any time, or email <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a>.</p>
+
+      <a class="btn" href="./">Back to home</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Last Mile Care</strong> · PIEDS Student Team, BITS Pilani</p>
+    <p class="muted-light small">Available 24×7 · <a href="tel:+919111648336">+91 91116 48336</a> · <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a></p>
+  </footer>
+
+  <script>
+    // The booking page saves a short summary here just before moving to this page.
+    // If someone opens this page directly, the general message above is shown instead.
+    try {
+      const b = JSON.parse(sessionStorage.getItem("lmc-booking") || "null");
+      if (b) {
+        document.getElementById("ack-call").textContent =
+          `Our coordinator will call you shortly on ${b.phone} to confirm the arrangements.`;
+        document.getElementById("ack-package").textContent = b.package;
+        document.getElementById("ack-total").textContent = b.total;
+        document.getElementById("ack-payment").textContent = b.payment;
+        document.getElementById("ack-summary").hidden = false;
+      }
+    } catch (e) { /* storage unavailable: keep the general message */ }
+  </script>
+</body>
+</html>

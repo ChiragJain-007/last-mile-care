@@ -122,10 +122,6 @@
 
         </form>
 
-        <div class="done" hidden>
-          <h3>Booking received</h3>
-          <p>Our coordinator will call you shortly on <strong class="done-phone"></strong>. If you need us sooner, call <a href="tel:+919111648336">+91 91116 48336</a> any time, or email <a href="mailto:f20260984@pilani.bits-pilani.ac.in">f20260984@pilani.bits-pilani.ac.in</a>.</p>
-        </div>
       </div>
     </article>
   </template>
@@ -356,9 +352,14 @@
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error("send failed");
 
-        form.hidden = true;
-        node.querySelector(".done-phone").textContent = v("phone");
-        node.querySelector(".done").hidden = false;
+        // Move to the acknowledgement page. replace() means the browser's Back
+        // button won't return to the filled-in form (avoids duplicate bookings).
+        try {
+          sessionStorage.setItem("lmc-booking", JSON.stringify({
+            package: pkg.name, total: rupees(s.total), payment: s.paymentText, phone: v("phone"),
+          }));
+        } catch (e) { /* storage unavailable: the page shows a general message */ }
+        location.replace("booked.html");
       } catch (err) {
         showError(node, "We couldn't send your booking. " + CONTACT_HTML, true);
         button.disabled = false;
