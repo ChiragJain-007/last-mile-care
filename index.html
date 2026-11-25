@@ -17,8 +17,6 @@
     <a href="#" class="brand">Last Mile Care</a>
     <nav>
       <a href="#packages">Packages</a>
-      <a href="#flexible">Build your own</a>
-      <a href="#request">Request</a>
     </nav>
     <a class="btn btn-small" href="tel:+919111648336">Call 24×7</a>
   </header>
@@ -29,12 +27,12 @@
     <h1>No family should have to manage a funeral alone.</h1>
     <p class="lead">One manager, every phase, complete logistical relief. From the first hours to the 13th day, we coordinate the vendors so you can be with your family.</p>
     <div class="hero-actions">
-      <a class="btn" href="#packages">See packages</a>
-      <a class="btn btn-ghost" href="#flexible">Pick only what you need</a>
+      <a class="btn" href="#packages">Choose a package</a>
+      <a class="btn btn-ghost" href="tel:+919111648336">Call +91 91116 48336</a>
     </div>
   </section>
 
-  <!-- ===== How it works ===== -->
+  <!-- ===== What we take care of ===== -->
   <section class="steps">
     <p class="label">What we take care of</p>
     <ol>
@@ -46,228 +44,241 @@
     </ol>
   </section>
 
-  <!-- ===== Packages (filled in by script.js) ===== -->
+  <!-- ===== Packages: 4 stacked rows, click one to open it ===== -->
   <section id="packages" class="section">
     <p class="label">Packages</p>
     <h2>Choose a package</h2>
-    <div class="cards" id="package-cards"></div>
-  </section>
-
-  <!-- ===== Flexible package (filled in by script.js) ===== -->
-  <section id="flexible" class="section section-dark">
-    <p class="label">Flexible package</p>
-    <h2>Pick only the services you need</h2>
-    <p class="lead">Tick what you need and see the exact price instantly. No hidden charges.</p>
-    <div class="flex-layout">
-      <div id="service-list" class="service-list"></div>
-      <aside class="summary">
-        <p class="label">Your selection</p>
-        <ul id="summary-items"><li class="muted">Nothing selected yet</li></ul>
-        <div class="total"><span>Total</span><strong id="total">₹0</strong></div>
-        <button class="btn" id="use-flexible">Request these services</button>
-      </aside>
+    <p class="lead muted">Tap a package to see what's included, add your details and confirm.</p>
+    <div id="package-list" class="package-list">
+      <p class="muted">Loading packages…</p>
     </div>
-  </section>
-
-  <!-- ===== Request form ===== -->
-  <section id="request" class="section">
-    <p class="label">Request a service</p>
-    <h2>We'll call you back within minutes</h2>
-    <form id="request-form" class="form">
-      <label>Your name<input name="name" required /></label>
-      <label>Phone number<input name="phone" type="tel" required /></label>
-      <label>City
-        <select name="city" required>
-          <option value="">Select city</option>
-          <option>Delhi-NCR</option>
-          <option>Chandigarh Tricity</option>
-          <option>Other</option>
-        </select>
-      </label>
-      <label>Package
-        <select name="package" id="package-select" required></select>
-      </label>
-      <p class="form-note" id="form-selection"></p>
-      <button class="btn" type="submit">Send request on WhatsApp</button>
-      <p class="muted small">Prefer to talk? Call us any time at <a href="tel:+919111648336">+91 91116 48336</a>.</p>
-    </form>
   </section>
 
   <footer class="footer">
     <p><strong>Last Mile Care</strong> · PIEDS Student Team, BITS Pilani</p>
-    <p class="muted small">Prices are indicative and may vary by city.</p>
+    <p class="muted-light small">Available 24×7 · <a href="tel:+919111648336">+91 91116 48336</a> · Prices are indicative and may vary by city.</p>
   </footer>
 
+  <!-- One package row is built from this template for each package in prices.json -->
+  <template id="package-template">
+    <article class="pkg">
+      <button class="pkg-head" type="button" aria-expanded="false">
+        <span class="pkg-title">
+          <span class="pkg-name"></span>
+          <span class="pkg-blurb"></span>
+        </span>
+        <span class="pkg-price"></span>
+        <span class="chevron" aria-hidden="true"></span>
+      </button>
+
+      <div class="pkg-body" hidden>
+        <form class="booking" novalidate>
+
+          <div class="step">
+            <h3><span class="num">1</span> <span class="step-title">What's included</span></h3>
+            <div class="services"></div>
+          </div>
+
+          <div class="step">
+            <h3><span class="num">2</span> Your details</h3>
+            <div class="grid">
+              <label>Your name<input name="name" autocomplete="name" required /></label>
+              <label>Phone number<input name="phone" type="tel" autocomplete="tel" required /></label>
+              <label><span>Email <span class="muted">(optional)</span></span><input name="email" type="email" autocomplete="email" /></label>
+              <label>City
+                <select name="city" required>
+                  <option value="">Select city</option>
+                  <option>Delhi-NCR</option>
+                  <option>Chandigarh Tricity</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label class="wide">Address or hospital<input name="address" required /></label>
+              <label class="wide"><span>Anything we should know <span class="muted">(optional)</span></span><textarea name="notes" rows="2"></textarea></label>
+            </div>
+          </div>
+
+          <div class="step">
+            <h3><span class="num">3</span> Final payment</h3>
+            <ul class="bill"></ul>
+            <div class="bill-total"><span>Total</span><strong class="total">₹0</strong></div>
+            <fieldset class="pay">
+              <legend>How will you pay?</legend>
+              <label><input type="radio" name="payment" value="upi" required /> UPI to the coordinator</label>
+              <label><input type="radio" name="payment" value="cash" /> Cash to the coordinator</label>
+            </fieldset>
+            <p class="small muted">Nothing is charged online. You pay the coordinator once they have confirmed the arrangements with you.</p>
+            <p class="error" role="alert" hidden></p>
+            <button class="btn confirm" type="submit">Confirm booking</button>
+          </div>
+
+        </form>
+
+        <div class="done" hidden>
+          <h3>Booking received</h3>
+          <p>Our coordinator will call you shortly on <strong class="done-phone"></strong>. If you need us sooner, call <a href="tel:+919111648336">+91 91116 48336</a>, any time.</p>
+        </div>
+      </div>
+    </article>
+  </template>
+
   <script>
-// =====================================================
-// Last Mile Care — all prices live here. Edit freely.
-// =====================================================
+    // =====================================================
+    // Prices and packages live in prices.json. Edit them there.
+    // The same file is used by the email function in api/book.js.
+    // =====================================================
 
-// Every service a family can pick in the Flexible package.
-// id = short name used in code, name = what people see, price = in rupees
-const SERVICES = [
-  { id: "transport",  name: "Body transport (hearse)",       price: 4000 },
-  { id: "freezer",    name: "Freezer box",                   price: 2500 },
-  { id: "priest",     name: "Priest for your community",     price: 3500 },
-  { id: "samagri",    name: "Samagri",                       price: 3000 },
-  { id: "cremation",  name: "Cremation / burial slot",       price: 8000 },
-  { id: "manager",    name: "On-site funeral manager",       price: 2000 },
-  { id: "flowers",    name: "Flowers",                       price: 1500 },
-  { id: "guestlink",  name: "Guest-management link",         price: 500  },
-  { id: "prayermeet", name: "Prayer meet arrangement",       price: 1500 },
-  { id: "mangowood",  name: "Mango wood",                    price: 1000 },
-  { id: "catering",   name: "Catering",                      price: 5000 },
-  { id: "day13",      name: "13th-day rites",                price: 3000 },
-  { id: "asthi",      name: "Asthi visarjan",                price: 2500 },
-  { id: "paperwork",  name: "Death certificate paperwork",   price: 1000 },
-];
+    let DATA = null;
 
-// The three fixed packages. "includes" lists service ids from above.
-const PACKAGES = [
-  {
-    name: "Essential",
-    price: 20000,
-    includes: ["transport", "freezer", "priest", "samagri", "cremation"],
-  },
-  {
-    name: "Complete",
-    price: 25000,
-    tag: "Most chosen",
-    includes: ["transport", "freezer", "priest", "samagri", "cremation",
-               "manager", "flowers", "guestlink", "prayermeet", "mangowood"],
-  },
-  {
-    name: "Premium",
-    price: 33000,
-    includes: ["transport", "freezer", "priest", "samagri", "cremation",
-               "manager", "flowers", "guestlink", "prayermeet", "mangowood",
-               "catering", "day13", "asthi"],
-  },
-];
+    // Turn 25000 into "₹25,000" (Indian digit grouping)
+    function rupees(amount) {
+      return "₹" + amount.toLocaleString("en-IN");
+    }
 
-// WhatsApp number that receives requests (country code, no + or spaces)
-const WHATSAPP_NUMBER = "919111648336";
+    function service(id) {
+      return DATA.services.find(s => s.id === id);
+    }
 
-// =====================================================
-// Code below builds the page from the data above.
-// =====================================================
+    // Build one package row from the template
+    function buildPackage(pkg) {
+      const node = document.getElementById("package-template").content.firstElementChild.cloneNode(true);
+      node.style.setProperty("--shade", pkg.shade);
+      node.dataset.id = pkg.id;
 
-// Turn 25000 into "₹25,000" (Indian digit grouping)
-function rupees(amount) {
-  return "₹" + amount.toLocaleString("en-IN");
-}
+      node.querySelector(".pkg-name").textContent = pkg.name;
+      node.querySelector(".pkg-blurb").textContent = pkg.blurb;
+      node.querySelector(".pkg-price").textContent = pkg.price ? rupees(pkg.price) : "You choose";
 
-function serviceName(id) {
-  return SERVICES.find(s => s.id === id).name;
-}
+      const servicesBox = node.querySelector(".services");
 
-// ---------- Package cards ----------
-const cardsBox = document.getElementById("package-cards");
-PACKAGES.forEach(pkg => {
-  const card = document.createElement("div");
-  card.className = "card" + (pkg.tag ? " card-featured" : "");
-  card.innerHTML = `
-    ${pkg.tag ? `<span class="tag">${pkg.tag}</span>` : ""}
-    <h3>${pkg.name}</h3>
-    <p class="price">${rupees(pkg.price)}</p>
-    <ul>${pkg.includes.map(id => `<li>${serviceName(id)}</li>`).join("")}</ul>
-    <button class="btn ${pkg.tag ? "" : "btn-ghost"}">Choose ${pkg.name}</button>
-  `;
-  card.querySelector("button").addEventListener("click", () => choosePackage(pkg.name));
-  cardsBox.appendChild(card);
-});
+      if (pkg.id === "flexible") {
+        node.querySelector(".step-title").textContent = "Pick the services you need";
+        servicesBox.classList.add("checklist");
+        DATA.services.forEach(s => {
+          const row = document.createElement("label");
+          row.className = "check";
+          row.innerHTML = `<input type="checkbox" value="${s.id}" /><span>${s.name}</span><span class="amt">${rupees(s.price)}</span>`;
+          servicesBox.appendChild(row);
+        });
+        servicesBox.addEventListener("change", () => updateBill(node, pkg));
+      } else {
+        const list = document.createElement("ul");
+        list.className = "included";
+        list.innerHTML = pkg.includes.map(id => `<li>${service(id).name}</li>`).join("");
+        servicesBox.appendChild(list);
+      }
 
-// ---------- Flexible package checklist ----------
-const listBox = document.getElementById("service-list");
-SERVICES.forEach(s => {
-  const row = document.createElement("label");
-  row.className = "service";
-  row.innerHTML = `
-    <input type="checkbox" value="${s.id}" />
-    <span class="service-name">${s.name}</span>
-    <span class="service-price">${rupees(s.price)}</span>
-  `;
-  listBox.appendChild(row);
-});
+      node.querySelector(".pkg-head").addEventListener("click", () => toggle(node));
+      node.querySelector("form").addEventListener("submit", e => submitBooking(e, node, pkg));
+      updateBill(node, pkg);
+      return node;
+    }
 
-// Which service ids are ticked right now
-function selectedIds() {
-  return [...listBox.querySelectorAll("input:checked")].map(box => box.value);
-}
+    // Only one package open at a time
+    function toggle(node) {
+      const opening = node.querySelector(".pkg-head").getAttribute("aria-expanded") !== "true";
+      document.querySelectorAll(".pkg").forEach(p => {
+        p.querySelector(".pkg-head").setAttribute("aria-expanded", "false");
+        p.querySelector(".pkg-body").hidden = true;
+        p.classList.remove("open");
+      });
+      if (opening) {
+        node.querySelector(".pkg-head").setAttribute("aria-expanded", "true");
+        node.querySelector(".pkg-body").hidden = false;
+        node.classList.add("open");
+        node.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
 
-function selectedTotal() {
-  return selectedIds().reduce((sum, id) => sum + SERVICES.find(s => s.id === id).price, 0);
-}
+    function chosenIds(node, pkg) {
+      if (pkg.id !== "flexible") return pkg.includes;
+      return [...node.querySelectorAll(".checklist input:checked")].map(b => b.value);
+    }
 
-// Redraw the summary box every time a checkbox changes
-function updateSummary() {
-  const ids = selectedIds();
-  const items = document.getElementById("summary-items");
-  items.innerHTML = ids.length
-    ? ids.map(id => {
-        const s = SERVICES.find(x => x.id === id);
-        return `<li><span>${s.name}</span><span>${rupees(s.price)}</span></li>`;
-      }).join("")
-    : `<li class="muted">Nothing selected yet</li>`;
-  document.getElementById("total").textContent = rupees(selectedTotal());
-  updateFormNote();
-}
-listBox.addEventListener("change", updateSummary);
+    // Redraw the bill in step 3
+    function updateBill(node, pkg) {
+      const ids = chosenIds(node, pkg);
+      const bill = node.querySelector(".bill");
+      let total;
+      if (pkg.id === "flexible") {
+        total = ids.reduce((sum, id) => sum + service(id).price, 0);
+        bill.innerHTML = ids.length
+          ? ids.map(id => `<li><span>${service(id).name}</span><span>${rupees(service(id).price)}</span></li>`).join("")
+          : `<li class="muted">Tick at least one service above</li>`;
+      } else {
+        total = pkg.price;
+        bill.innerHTML = `<li><span>${pkg.name} package (${pkg.includes.length} services)</span><span>${rupees(pkg.price)}</span></li>`;
+      }
+      node.querySelector(".total").textContent = rupees(total);
+    }
 
-// ---------- Request form ----------
-const packageSelect = document.getElementById("package-select");
-packageSelect.innerHTML =
-  `<option value="">Select package</option>` +
-  PACKAGES.map(p => `<option>${p.name}</option>`).join("") +
-  `<option>Flexible</option>`;
+    function showError(node, message) {
+      const box = node.querySelector(".error");
+      box.textContent = message;
+      box.hidden = !message;
+    }
 
-function choosePackage(name) {
-  packageSelect.value = name;
-  updateFormNote();
-  document.getElementById("request").scrollIntoView({ behavior: "smooth" });
-}
+    async function submitBooking(event, node, pkg) {
+      event.preventDefault();
+      const form = event.target;
+      showError(node, "");
 
-document.getElementById("use-flexible").addEventListener("click", () => {
-  if (selectedIds().length === 0) {
-    document.getElementById("total").textContent = "Tick at least one service";
-    return;
-  }
-  choosePackage("Flexible");
-});
+      if (pkg.id === "flexible" && chosenIds(node, pkg).length === 0) {
+        return showError(node, "Please tick at least one service.");
+      }
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return showError(node, "Please fill in your name, phone, city, address and payment method.");
+      }
 
-packageSelect.addEventListener("change", updateFormNote);
+      const button = form.querySelector(".confirm");
+      button.disabled = true;
+      button.textContent = "Sending…";
 
-// Show what will be requested, under the package dropdown
-function updateFormNote() {
-  const note = document.getElementById("form-selection");
-  const choice = packageSelect.value;
-  if (choice === "Flexible") {
-    const ids = selectedIds();
-    note.textContent = ids.length
-      ? `Flexible: ${ids.map(serviceName).join(", ")} — ${rupees(selectedTotal())}`
-      : "Tick services in the Flexible section above first.";
-  } else if (choice) {
-    note.textContent = `${choice} package — ${rupees(PACKAGES.find(p => p.name === choice).price)}`;
-  } else {
-    note.textContent = "";
-  }
-}
+      const payload = {
+        package: pkg.id,
+        services: chosenIds(node, pkg),
+        name: form.elements.name.value,
+        phone: form.elements.phone.value,
+        email: form.elements.email.value,
+        city: form.elements.city.value,
+        address: form.elements.address.value,
+        notes: form.elements.notes.value,
+        payment: form.elements.payment.value,
+      };
 
-// On submit, open WhatsApp with a ready-made message
-document.getElementById("request-form").addEventListener("submit", event => {
-  event.preventDefault();
-  const form = event.target;
-  const lines = [
-    "New request — Last Mile Care",
-    `Name: ${form.name.value}`,
-    `Phone: ${form.phone.value}`,
-    `City: ${form.city.value}`,
-    `Package: ${document.getElementById("form-selection").textContent || packageSelect.value}`,
-  ];
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-  window.open(url, "_blank");
-});
+      try {
+        const res = await fetch("/api/book", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.ok) throw new Error(result.error || "Something went wrong. Please call us on +91 91116 48336.");
 
+        form.hidden = true;
+        node.querySelector(".done-phone").textContent = payload.phone;
+        node.querySelector(".done").hidden = false;
+      } catch (err) {
+        showError(node, err instanceof TypeError ? "No connection. Please call us on +91 91116 48336." : err.message);
+        button.disabled = false;
+        button.textContent = "Confirm booking";
+      }
+    }
+
+    // Load prices.json and build the four package rows
+    fetch("prices.json")
+      .then(r => r.json())
+      .then(data => {
+        DATA = data;
+        const list = document.getElementById("package-list");
+        list.innerHTML = "";
+        data.packages.forEach(pkg => list.appendChild(buildPackage(pkg)));
+      })
+      .catch(() => {
+        document.getElementById("package-list").innerHTML =
+          `<p>Couldn't load packages. Please call us on <a href="tel:+919111648336">+91 91116 48336</a>.</p>`;
+      });
   </script>
 </body>
 </html>

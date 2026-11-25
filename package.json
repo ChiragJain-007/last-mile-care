@@ -1,0 +1,9 @@
+{
+  "name": "last-mile-care",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Last Mile Care MVP website",
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
