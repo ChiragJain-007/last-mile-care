@@ -121,18 +121,19 @@ label:has(select:valid) .req,
 .ack-logo { position: absolute; left: 3vw; top: 50%; transform: translate(-50%, -50%); width: min(32px, 4.8vw); height: auto; pointer-events: none; }
 .ack-page { min-height: 100vh; display: flex; flex-direction: column; }
 .ack { flex: 1; display: grid; place-items: center; padding: 60px 6vw; }
-.ack-card { width: 100%; max-width: 620px; background: #fff; border: 1px solid var(--line); border-top: 6px solid var(--gold); border-radius: 18px; padding: 40px 36px; text-align: center; }
+.ack-card { width: 100%; max-width: 620px; background: #e2d5be; border: 1px solid #d3c3a5; border-top: 6px solid var(--gold); border-radius: 18px; padding: 40px 36px; text-align: center; }
 .ack-card h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); max-width: none; margin-bottom: 12px; }
-.ack-card .lead { margin: 0 auto 24px; }
+.ack-card .lead { margin: 0 auto 24px; color: var(--text); }
+.ack-card .label { color: #8a5a12; }
 .ack-mark { width: 56px; height: 56px; margin: 0 auto 18px; border-radius: 50%; background: var(--gold); position: relative; }
 .ack-mark::after { content: ""; position: absolute; left: 20px; top: 13px; width: 12px; height: 22px; border-right: 4px solid var(--navy); border-bottom: 4px solid var(--navy); transform: rotate(45deg); }
-.ack-summary { display: grid; gap: 0; margin: 0 0 24px; text-align: left; border: 1px solid var(--line); border-radius: 12px; }
-.ack-summary div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.ack-summary { display: grid; gap: 0; margin: 0 0 24px; text-align: left; border: 1px solid rgba(27, 36, 48, .18); border-radius: 12px; }
+.ack-summary div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 16px; border-bottom: 1px solid rgba(27, 36, 48, .18); }
 .ack-summary div:last-child { border-bottom: 0; }
-.ack-summary dt { color: var(--muted); }
+.ack-summary dt { color: #4a5160; }
 .ack-summary dd { margin: 0; font-weight: 700; text-align: right; }
 .ack-phone { font-family: var(--serif); font-weight: 600; font-size: 1.15em; color: var(--navy); white-space: nowrap; letter-spacing: .01em; }
-.ack-help { color: var(--muted); margin: 0 0 26px; }
+.ack-help { color: #4a5160; margin: 0 0 26px; }
 .ack-help a { color: var(--text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .ack-card { padding: 30px 20px; } }
 
